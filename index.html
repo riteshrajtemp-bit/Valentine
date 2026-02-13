@@ -58,9 +58,8 @@
             background-color: gray;
             color: white;
             position: fixed;
-            /* default starting position */
-            left: 150px;
-            top: 200px;
+            left: 150px; /* original X */
+            top: 200px;  /* original Y */
         }
 
         .heart {
@@ -132,24 +131,21 @@
         const loveMessage = document.getElementById("loveMessage");
         const bgMusic = document.getElementById("bgMusic");
 
-        // Original starting position of No button
+        // Original starting coordinates
         const noBtnOriginal = { left: 150, top: 200 };
 
-        // Reset No button position on page load
-        function resetNoButton() {
+        // Reset No button to original position on page load
+        window.addEventListener("load", () => {
             noBtn.style.left = noBtnOriginal.left + "px";
             noBtn.style.top = noBtnOriginal.top + "px";
-        }
-        // Reset when page loads
-        window.addEventListener("load", resetNoButton);
+        });
 
         // Move No button randomly but stay in safe vertical range
         function moveNoButton() {
             const margin = 20;
             const maxX = window.innerWidth - noBtn.offsetWidth - margin;
-
-            const minY = 150; // safe from top
-            const maxY = window.innerHeight - noBtn.offsetHeight - 150; // safe from bottom
+            const minY = 150;
+            const maxY = window.innerHeight - noBtn.offsetHeight - 150;
 
             const newX = Math.random() * maxX;
             const newY = minY + Math.random() * (maxY - minY);
@@ -199,7 +195,7 @@
 
         setInterval(createHeart, 300);
 
-        // Adjust No button if window resizes
+        // Adjust No button if window resizes (without overriding starting position)
         window.addEventListener("resize", () => {
             const btnRect = noBtn.getBoundingClientRect();
             if (btnRect.right > window.innerWidth) noBtn.style.left = (window.innerWidth - noBtn.offsetWidth - 20) + "px";
