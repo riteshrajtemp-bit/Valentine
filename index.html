@@ -77,21 +77,18 @@
         }
 
         #loveMessage {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
             font-size: 35px;
             color: white;
             animation: fadeIn 2s ease-in-out;
         }
 
         #lovePhoto {
-            width: auto;         /* keep original width */
-            max-width: 300px;    /* scale down if too big */
-            height: auto;        /* maintain aspect ratio */
+            width: 200px;
+            height: 200px;
             border-radius: 20px;
             margin-bottom: 20px;
-            display: block;
+            object-fit: cover;
+            animation: fadeIn 2s ease-in-out;
         }
 
         @keyframes fadeIn {
