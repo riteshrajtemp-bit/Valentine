@@ -43,21 +43,21 @@
             cursor: pointer;
             margin: 0;
             transition: left 0.3s ease, top 0.3s ease;
-            position: absolute;
-            top: 0;
             user-select: none;
         }
 
         #yesBtn {
             background-color: #ff2e63;
             color: white;
-            left: 0;
             position: relative;
+            left: 0;
+            top: 0;
         }
 
         #noBtn {
             background-color: gray;
             color: white;
+            position: fixed; /* critical fix: stays in viewport */
             left: 150px;
             top: 0;
         }
@@ -106,5 +106,89 @@
     <!-- Romantic Music -->
     <audio id="bgMusic" loop>
         <source src="https://www.bensound.com/bensound-music/bensound-romantic.mp3" type="audio/mpeg">
+    </audio>
 
+    <!-- Confetti Library -->
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
 
+    <script>
+        const noBtn = document.getElementById("noBtn");
+        const yesBtn = document.getElementById("yesBtn");
+        const mainText = document.getElementById("mainText");
+        const subText = document.getElementById("subText");
+        const buttons = document.getElementById("buttons");
+        const loveMessage = document.getElementById("loveMessage");
+        const bgMusic = document.getElementById("bgMusic");
+
+        // Function to get max allowed positions inside viewport
+        function getMaxPositions() {
+            const margin = 20;
+            const maxX = window.innerWidth - noBtn.offsetWidth - margin;
+            const maxY = window.innerHeight - noBtn.offsetHeight - margin;
+            return { maxX, maxY };
+        }
+
+        // Move the No button randomly inside viewport, never disappearing
+        function moveNoButton() {
+            const { maxX, maxY } = getMaxPositions();
+            let newX, newY;
+            let tries = 0;
+
+            // Retry if too close to current spot
+            do {
+                newX = Math.random() * maxX;
+                newY = Math.random() * maxY;
+                tries++;
+            } while (
+                (Math.abs(newX - noBtn.offsetLeft) < 50 && Math.abs(newY - noBtn.offsetTop) < 50) 
+                && tries < 10
+            );
+
+            noBtn.style.left = newX + "px";
+            noBtn.style.top = newY + "px";
+        }
+
+        // Bind all events: hover, click, touch — always runs
+        ["mouseenter", "mouseover", "mousedown", "touchstart"].forEach(event => {
+            noBtn.addEventListener(event, (e) => {
+                e.preventDefault(); // prevent click
+                moveNoButton();
+            });
+        });
+
+        // YES button click action
+        yesBtn.addEventListener("click", () => {
+            bgMusic.play();
+
+            mainText.classList.add("hidden");
+            subText.classList.add("hidden");
+            buttons.classList.add("hidden");
+
+            loveMessage.classList.remove("hidden");
+
+            confetti({
+                particleCount: 200,
+                spread: 100,
+                origin: { y: 0.6 }
+            });
+        });
+
+        // Floating hearts animation
+        function createHeart() {
+            const heart = document.createElement("div");
+            heart.classList.add("heart");
+            heart.innerHTML = "❤️";
+            heart.style.left = Math.random() * 100 + "vw";
+            heart.style.fontSize = Math.random() * 20 + 20 + "px";
+            document.body.appendChild(heart);
+
+            setTimeout(() => {
+                heart.remove();
+            }, 5000);
+        }
+
+        setInterval(createHeart, 300);
+    </script>
+
+</body>
+</html>
