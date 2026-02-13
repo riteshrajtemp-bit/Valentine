@@ -14,6 +14,7 @@
             font-family: Arial, sans-serif;
             overflow: hidden;
             text-align: center;
+            position: relative;
         }
 
         h1 {
@@ -30,7 +31,7 @@
         .buttons {
             margin-top: 30px;
             position: relative;
-            width: 200px;
+            width: 250px;
             height: 60px;
         }
 
@@ -40,10 +41,11 @@
             border: none;
             border-radius: 12px;
             cursor: pointer;
-            margin: 10px;
-            transition: 0.2s;
+            margin: 0;
+            transition: left 0.3s ease, top 0.3s ease;
             position: absolute;
             top: 0;
+            user-select: none;
         }
 
         #yesBtn {
@@ -51,14 +53,12 @@
             color: white;
             left: 0;
             position: relative;
-            margin: 0;
         }
 
         #noBtn {
             background-color: gray;
             color: white;
-            position: absolute;
-            left: 120px;
+            left: 150px;
             top: 0;
         }
 
@@ -70,4 +70,41 @@
         @keyframes float {
             0% { transform: translateY(100vh); opacity: 1; }
             100% { transform: translateY(-10vh); opacity: 0; }
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        #loveMessage {
+            font-size: 35px;
+            color: white;
+            animation: fadeIn 2s ease-in-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: scale(0.8); }
+            to { opacity: 1; transform: scale(1); }
+        }
+    </style>
+</head>
+<body>
+
+    <h1 id="mainText">Hey Riya 💖</h1>
+    <p id="subText">Will you be my Valentine? ❤️</p>
+
+    <div class="buttons" id="buttons">
+        <button id="yesBtn">Yes 💕</button>
+        <button id="noBtn">No 😏</button>
+    </div>
+
+    <div id="loveMessage" class="hidden">
+        I LOVE YOU RIYA ❤️😍 <br><br>
+        You just made me the happiest person alive 💖✨
+    </div>
+
+    <!-- Romantic Music -->
+    <audio id="bgMusic" loop>
+        <source src="https://www.bensound.com/bensound-music/bensound-romantic.mp3" type="audio/mpeg">
+
 
