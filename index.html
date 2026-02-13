@@ -57,9 +57,10 @@
         #noBtn {
             background-color: gray;
             color: white;
-            position: fixed; /* critical fix: stays in viewport */
+            position: fixed;
+            /* default starting position */
             left: 150px;
-            top: 0;
+            top: 200px;
         }
 
         .heart {
@@ -82,6 +83,15 @@
             animation: fadeIn 2s ease-in-out;
         }
 
+        #lovePhoto {
+            width: 200px;
+            height: 200px;
+            border-radius: 20px;
+            margin-bottom: 20px;
+            object-fit: cover;
+            animation: fadeIn 2s ease-in-out;
+        }
+
         @keyframes fadeIn {
             from { opacity: 0; transform: scale(0.8); }
             to { opacity: 1; transform: scale(1); }
@@ -99,11 +109,13 @@
     </div>
 
     <div id="loveMessage" class="hidden">
+        <img id="lovePhoto" src="https://placekitten.com/300/300" alt="Us together">
+        <br>
         I LOVE YOU RIYA ❤️😍 <br><br>
         You just made me the happiest person alive 💖✨
     </div>
 
-    <!-- Romantic Music -->
+    <!-- Custom Romantic Music -->
     <audio id="bgMusic" loop>
         <source src="https://www.bensound.com/bensound-music/bensound-romantic.mp3" type="audio/mpeg">
     </audio>
@@ -120,43 +132,41 @@
         const loveMessage = document.getElementById("loveMessage");
         const bgMusic = document.getElementById("bgMusic");
 
-        // Function to get max allowed positions inside viewport
-        function getMaxPositions() {
+        // Original starting position of No button
+        const noBtnOriginal = { left: 150, top: 200 };
+
+        // Reset No button position on page load
+        function resetNoButton() {
+            noBtn.style.left = noBtnOriginal.left + "px";
+            noBtn.style.top = noBtnOriginal.top + "px";
+        }
+        // Reset when page loads
+        window.addEventListener("load", resetNoButton);
+
+        // Move No button randomly but stay in safe vertical range
+        function moveNoButton() {
             const margin = 20;
             const maxX = window.innerWidth - noBtn.offsetWidth - margin;
-            const maxY = window.innerHeight - noBtn.offsetHeight - margin;
-            return { maxX, maxY };
-        }
 
-        // Move the No button randomly inside viewport, never disappearing
-        function moveNoButton() {
-            const { maxX, maxY } = getMaxPositions();
-            let newX, newY;
-            let tries = 0;
+            const minY = 150; // safe from top
+            const maxY = window.innerHeight - noBtn.offsetHeight - 150; // safe from bottom
 
-            // Retry if too close to current spot
-            do {
-                newX = Math.random() * maxX;
-                newY = Math.random() * maxY;
-                tries++;
-            } while (
-                (Math.abs(newX - noBtn.offsetLeft) < 50 && Math.abs(newY - noBtn.offsetTop) < 50) 
-                && tries < 10
-            );
+            const newX = Math.random() * maxX;
+            const newY = minY + Math.random() * (maxY - minY);
 
             noBtn.style.left = newX + "px";
             noBtn.style.top = newY + "px";
         }
 
-        // Bind all events: hover, click, touch — always runs
+        // Always run when hovered, clicked, or touched
         ["mouseenter", "mouseover", "mousedown", "touchstart"].forEach(event => {
             noBtn.addEventListener(event, (e) => {
-                e.preventDefault(); // prevent click
+                e.preventDefault();
                 moveNoButton();
             });
         });
 
-        // YES button click action
+        // YES button click
         yesBtn.addEventListener("click", () => {
             bgMusic.play();
 
@@ -188,6 +198,14 @@
         }
 
         setInterval(createHeart, 300);
+
+        // Adjust No button if window resizes
+        window.addEventListener("resize", () => {
+            const btnRect = noBtn.getBoundingClientRect();
+            if (btnRect.right > window.innerWidth) noBtn.style.left = (window.innerWidth - noBtn.offsetWidth - 20) + "px";
+            if (btnRect.bottom > window.innerHeight - 150) noBtn.style.top = (window.innerHeight - noBtn.offsetHeight - 150) + "px";
+            if (btnRect.top < 150) noBtn.style.top = 150 + "px";
+        });
     </script>
 
 </body>
